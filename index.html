@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DIASCAN Connection Test</title>
+</head>
+<body>
+  <h1>DIASCAN Connection Test</h1>
+
+  <p id="camera">Camera: Not tested</p>
+  <p id="connection">ESP32: Not tested</p>
+
+  <button onclick="testCamera()">Test Camera</button>
+  <button onclick="testESP32()">Test ESP32 Connection</button>
+
+  <script>
+    async function testCamera() {
+      const output = document.getElementById("camera");
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true
+        });
+
+        stream.getTracks().forEach(track => track.stop());
+        output.textContent = "Camera: Working!";
+      } catch (error) {
+        output.textContent = "Camera error: " + error.message;
+      }
+    }
+
+    async function testESP32() {
+      const output = document.getElementById("connection");
+      output.textContent = "ESP32: Testing...";
+
+      try {
+        const response = await fetch(
+          "http://192.168.4.1/test"
+        );
+
+        const message = await response.text();
+        output.textContent = "ESP32: " + message;
+      } catch (error) {
+        output.textContent =
+          "ESP32 request failed: " + error.message;
+      }
+    }
+  </script>
+</body>
+</html>
